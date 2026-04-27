@@ -3,10 +3,7 @@ const prompt = require("prompt-sync")();
 
 const cakeRecipes = require("./cake-recipes.json");
 
-// Your functions here
-
 // first assignment
-
 const getAuthors = [];
 
 cakeRecipes.forEach(({Author}) => {
@@ -21,7 +18,6 @@ console.log(getAuthors);
 // second assignment
 let { Name: Recipe } = cakeRecipes[0];
 
-// Loop through all recipes and log their names
 cakeRecipes.forEach(({ Name }) => {
    console.log(Name);
 });
@@ -29,7 +25,6 @@ cakeRecipes.forEach(({ Name }) => {
 console.log(Recipe);
 
 // third assignment filter
-
 function getRecipesByAuthor(author) {
   const recipesByAuthor = cakeRecipes.filter(({ Author }) => Author === author);
   return recipesByAuthor.map(({ Name, Author }) => ({ Name, Author }));
@@ -38,11 +33,6 @@ function getRecipesByAuthor(author) {
 console.log(getRecipesByAuthor('Barney Desmazery'));
 
 // fourth assignment .filter & .some
-/* Create a function that returns a list of recipes that contain a given ingredient. 
-The function takes a list of recipes as input and an ingredient as a string. 
-Use the .filter() method to filter the recipes and the .some() method 
-to check if the ingredient list contains the given ingredient (input).  */ 
-
 function getRecipesByIngredient(ingredient) {
   const recipesWithIngredient = cakeRecipes.filter(({ Ingredients }) => Ingredients.some(ing => ing.toLowerCase().includes(ingredient.toLowerCase())));
   return recipesWithIngredient.map(({ Name }) => ({ Name }));
@@ -51,20 +41,17 @@ function getRecipesByIngredient(ingredient) {
 console.log(getRecipesByIngredient('140g caster sugar'));
 
 // fifth assignment .find & .includes
-/* Create a function that takes a list of recipes and a name (string) as input. 
-The function returns a single recipe that matches the given name. 
-Use the .find() and .includes() method. */
-
 function findRecipeByName(recipes, name) {
-  return recipes.find(recipe => recipe.Name.includes(name));
+  if (!recipes || !name) {
+    return "No recipes found, try again.";
+  }
+  return recipes.find(recipe => recipe.Name.toLowerCase().includes(name.toLowerCase()));
 }
 
 console.log(".find() and .includes() methods:");
 console.log(findRecipeByName(cakeRecipes, 'Christmas cupcakes'));
 
-/* sixth assignment .reduce 
-Finally, create a function that returns all ingredients of a given recipe list into a single array. You can use this function, for example, when you want to create a grocery list. Use the .reduce() method to flatten the recipe array. */
-
+// sixth assignment .reduce
 function groceryList(recipeName) {
   const recipe = findRecipeByName(cakeRecipes, recipeName);
   if (!recipe || !recipe.Ingredients) {
@@ -82,7 +69,6 @@ console.log("Grocery list for Christmas cupcakes:");
 console.log(groceryList('Christmas cupcakes'));
 
 // Part 2
-
 const displayMenu = () => {
   console.log("\nRecipe Management System Menu:");
   console.log("1. Show All Authors");
@@ -94,7 +80,6 @@ const displayMenu = () => {
   const choice = prompt("Enter a number (1-5) or 0 to exit: ");
   return parseInt(choice);
 }
-
 
 let choice;
 
@@ -115,8 +100,15 @@ do {
       break;
     case 4:
       const recipeName = prompt("Enter recipe name: ");
-      console.log(findRecipeByName(cakeRecipes, recipeName));
-        break;
+      const foundRecipe = findRecipeByName(cakeRecipes, recipeName);
+      if (typeof foundRecipe === 'string') {
+        console.log(foundRecipe);
+      } else if (foundRecipe && foundRecipe.Name) {
+        console.log(`Recipe found: ${foundRecipe.Name}`);
+      } else {
+        console.log("No recipes are found, try again.");
+      }
+      break;
     case 5:
       const savedRecipeName = prompt("Enter recipe name to get ingredients: ");
       console.log(groceryList(savedRecipeName));
